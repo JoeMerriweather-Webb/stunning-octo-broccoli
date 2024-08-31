@@ -7,5 +7,7 @@ defmodule AppWeb.Router do
 
   scope "/api", AppWeb do
     pipe_through :api
+
+    resources "/documents", DocumentController, only: [:index, :show, :create]
   end
 end

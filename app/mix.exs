@@ -30,7 +30,9 @@ defmodule App.MixProject do
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
       {:jason, "~> 1.2"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      {:ex_machina, "~> 2.8.0", only: :test},
+      {:faker, "~> 0.18.0", only: :test}
     ]
   end
 
