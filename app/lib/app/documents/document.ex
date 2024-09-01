@@ -8,8 +8,8 @@ defmodule App.Documents.Document do
     field :filename, :string
     field :content_type, :string
     field :upload, :binary
-    field :plaintiffs, {:array, :string}
-    field :defendants, {:array, :string}
+    field :plaintiffs, {:array, :string}, default: []
+    field :defendants, {:array, :string}, default: []
 
     timestamps(type: :utc_datetime)
   end
@@ -26,4 +26,7 @@ defmodule App.Documents.Document do
       :defendants
     ])
   end
+
+  def wrap_changeset(%{valid?: true} = changeset), do: {:ok, changeset}
+  def wrap_changeset(%{valid?: false} = changeset), do: {:error, changeset}
 end

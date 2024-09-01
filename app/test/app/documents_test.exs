@@ -25,20 +25,24 @@ defmodule App.DocumentsTest do
     end
 
     test "create_document/1 with valid data creates a document" do
+      upload = Path.absname("test/support/fixtures/uploads/A.xml") |> File.read!()
+
       valid_attrs = %{
         filename: "some filename",
         content_type: "some content_type",
-        upload: "some upload",
-        plaintiffs: ["option1", "option2"],
-        defendants: ["option1", "option2"]
+        upload: upload
       }
 
       assert {:ok, %Document{} = document} = Documents.create_document(valid_attrs)
       assert document.filename == "some filename"
       assert document.content_type == "some content_type"
-      assert document.upload == "some upload"
-      assert document.plaintiffs == ["option1", "option2"]
-      assert document.defendants == ["option1", "option2"]
+      assert document.upload == upload
+      assert document.plaintiffs == ["ANGELO ANGELES"]
+
+      assert document.defendants == [
+               "HILL-ROM COMPANY, INC., an Indiana corporation",
+               "DOES 1 through 100, inclusive"
+             ]
     end
 
     test "create_document/1 with invalid data returns error changeset" do

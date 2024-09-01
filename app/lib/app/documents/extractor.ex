@@ -5,7 +5,7 @@ defmodule App.Documents.Extractor do
     upload
     # get the text for all of the "formatting" elements
     |> SweetXml.xpath(~x"//formatting/text()"l)
-    |> Enum.map(fn line ->  line |> List.to_string() |> String.trim() end)
+    |> Enum.map(fn line -> line |> List.to_string() |> String.trim() end)
     |> find_data([])
   end
 

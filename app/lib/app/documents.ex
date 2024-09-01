@@ -50,8 +50,14 @@ defmodule App.Documents do
 
   """
   def create_document(attrs \\ %{}) do
-    %Document{plaintiffs: [], defendants: []}
-    |> Document.changeset(attrs)
-    |> Repo.insert()
+    changeset = Document.changeset(%Document{}, attrs)
+
+    with {:ok, changeset} <- Document.wrap_changeset(changeset) do
+      extracted_data = App.Documents.Extractor.extract_data(changeset.changes.upload)
+
+      changeset
+      |> Ecto.Changeset.change(extracted_data)
+      |> Repo.insert()
+    end
   end
 end

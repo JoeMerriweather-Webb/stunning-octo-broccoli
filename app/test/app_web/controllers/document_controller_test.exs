@@ -26,6 +26,7 @@ defmodule AppWeb.DocumentControllerTest do
 
   describe "create document" do
     test "renders document when data is valid", %{conn: conn} do
+      @create_attrs.upload.path |> File.read!()
       conn = post(conn, ~p"/api/documents", document: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
@@ -34,9 +35,12 @@ defmodule AppWeb.DocumentControllerTest do
       assert %{
                "id" => id,
                "content_type" => @create_attrs.upload.content_type,
-               "defendants" => [],
+               "defendants" => [
+                 "HILL-ROM COMPANY, INC., an Indiana corporation",
+                 "DOES 1 through 100, inclusive"
+               ],
                "filename" => @create_attrs.upload.filename,
-               "plaintiffs" => []
+               "plaintiffs" => ["ANGELO ANGELES"]
              } == json_response(conn, 200)["data"]
     end
 
