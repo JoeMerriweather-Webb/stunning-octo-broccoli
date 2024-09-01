@@ -41,6 +41,8 @@ defmodule AppWeb do
         formats: [:html, :json],
         layouts: [html: AppWeb.Layouts]
 
+      use OpenApiSpex.ControllerSpecs
+
       import Plug.Conn
 
       unquote(verified_routes())

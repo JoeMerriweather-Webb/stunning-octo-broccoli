@@ -3,11 +3,17 @@ defmodule AppWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug OpenApiSpex.Plug.PutApiSpec, module: App.ApiSpec
   end
 
-  scope "/api", AppWeb do
+  scope "/api" do
     pipe_through :api
 
-    resources "/documents", DocumentController, only: [:index, :show, :create]
+    scope "/", AppWeb do
+      resources "/documents", DocumentController, only: [:index, :show, :create]
+    end
+
+    get "/openapi", OpenApiSpex.Plug.RenderSpec, []
+    get "/swaggerui", OpenApiSpex.Plug.SwaggerUI, path: "/api/openapi"
   end
 end
