@@ -17,6 +17,8 @@ defmodule AppWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import AppWeb.ConnCase
+
+      alias App.Factory
     end
   end
 

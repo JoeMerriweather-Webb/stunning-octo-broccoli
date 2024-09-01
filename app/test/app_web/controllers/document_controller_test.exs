@@ -19,8 +19,25 @@ defmodule AppWeb.DocumentControllerTest do
 
   describe "index" do
     test "lists all documents", %{conn: conn} do
+      document = Factory.insert(:document)
       conn = get(conn, ~p"/api/documents")
-      assert json_response(conn, 200)["data"] == []
+
+      assert [
+               %{
+                 "attributes" => %{
+                   "content_type" => document.content_type,
+                   "defendants" => document.defendants,
+                   "filename" => document.filename,
+                   "plaintiffs" => document.plaintiffs
+                 },
+                 "id" => document.id,
+                 "links" => %{
+                   "self" => "http://www.example.com/documents/#{document.id}"
+                 },
+                 "relationships" => %{},
+                 "type" => "documents"
+               }
+             ] == json_response(conn, 200)["data"]
     end
   end
 
