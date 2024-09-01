@@ -22,7 +22,7 @@ defmodule App.Documents.Extractor do
           do: find_plaintiffs_below_versus(lines_below, []),
           else: plaintiffs
 
-      defendants = find_defendents_below_versus(lines_below, [])
+      defendants = find_defendants_below_versus(lines_below, [])
       %{plaintiffs: plaintiffs, defendants: defendants}
     else
       find_data(lines_below, [line | lines_above])
@@ -65,11 +65,11 @@ defmodule App.Documents.Extractor do
     end
   end
 
-  defp find_defendents_below_versus([], _defendants_lines) do
+  defp find_defendants_below_versus([], _defendants_lines) do
     []
   end
 
-  defp find_defendents_below_versus([line | lines], defendants_lines) do
+  defp find_defendants_below_versus([line | lines], defendants_lines) do
     if Regex.match?(~r/defendants./si, line) do
       defendants_lines
       |> Enum.reverse()
@@ -81,7 +81,7 @@ defmodule App.Documents.Extractor do
       |> Enum.map(&String.trim/1)
       |> Enum.reject(&(&1 in ["i", "j", ")"]))
       |> Enum.join(" ")
-      |> split_defendents()
+      |> split_defendants()
       # clean up text for each defendant
       |> Enum.map(&String.split(&1, " ", trim: true))
       |> Enum.map(&Enum.map(&1, fn string -> String.trim(string) end))
@@ -91,11 +91,11 @@ defmodule App.Documents.Extractor do
       |> Enum.map(&String.trim_trailing(&1, "."))
       |> Enum.map(&String.trim/1)
     else
-      find_defendents_below_versus(lines, [line | defendants_lines])
+      find_defendants_below_versus(lines, [line | defendants_lines])
     end
   end
 
-  defp split_defendents(defendent_text) do
+  defp split_defendants(defendent_text) do
     cond do
       String.contains?(defendent_text, "; and") ->
         String.split(defendent_text, "; and")
