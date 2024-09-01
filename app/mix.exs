@@ -31,6 +31,7 @@ defmodule App.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:jason, "~> 1.2"},
       {:bandit, "~> 1.5"},
+      {:sweet_xml, "~> 0.7.4"},
       {:ex_machina, "~> 2.8.0", only: :test},
       {:faker, "~> 0.18.0", only: :test}
     ]
