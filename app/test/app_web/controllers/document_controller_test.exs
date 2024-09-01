@@ -34,13 +34,18 @@ defmodule AppWeb.DocumentControllerTest do
 
       assert %{
                "id" => id,
-               "content_type" => @create_attrs.upload.content_type,
-               "defendants" => [
-                 "HILL-ROM COMPANY, INC., an Indiana corporation",
-                 "DOES 1 through 100, inclusive"
-               ],
-               "filename" => @create_attrs.upload.filename,
-               "plaintiffs" => ["ANGELO ANGELES"]
+               "attributes" => %{
+                 "content_type" => @create_attrs.upload.content_type,
+                 "defendants" => [
+                   "HILL-ROM COMPANY, INC., an Indiana corporation",
+                   "DOES 1 through 100, inclusive"
+                 ],
+                 "filename" => @create_attrs.upload.filename,
+                 "plaintiffs" => ["ANGELO ANGELES"]
+               },
+               "links" => %{"self" => "http://www.example.com/documents/#{id}"},
+               "relationships" => %{},
+               "type" => "documents"
              } == json_response(conn, 200)["data"]
     end
 

@@ -8,7 +8,7 @@ defmodule AppWeb.DocumentController do
 
   def index(conn, _params) do
     documents = Documents.list_documents()
-    render(conn, :index, documents: documents)
+    render(conn, :index, data: documents)
   end
 
   def create(conn, %{"document" => document_params}) do
@@ -18,13 +18,13 @@ defmodule AppWeb.DocumentController do
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/documents/#{document}")
-      |> render(:show, document: document)
+      |> render(:show, data: document)
     end
   end
 
   def show(conn, %{"id" => id}) do
     document = Documents.get_document!(id)
-    render(conn, :show, document: document)
+    render(conn, :show, data: document)
   end
 
   def get_create_params(document_params) do

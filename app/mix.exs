@@ -32,6 +32,7 @@ defmodule App.MixProject do
       {:jason, "~> 1.2"},
       {:bandit, "~> 1.5"},
       {:sweet_xml, "~> 0.7.4"},
+      {:jsonapi, "~> 1.8"},
       {:ex_machina, "~> 2.8.0", only: :test},
       {:faker, "~> 0.18.0", only: :test}
     ]
