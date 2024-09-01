@@ -27,13 +27,15 @@ defmodule AppWeb.DocumentController do
     render(conn, :show, data: document)
   end
 
-  def get_create_params(document_params) do
-    case document_params["upload"] do
-      %Plug.Upload{content_type: content_type, filename: filename, path: path} ->
-        %{content_type: content_type, filename: filename, upload: File.read!(path)}
+  def get_create_params(%Plug.Upload{} = upload) do
+    %{
+      content_type: upload.content_type,
+      filename: upload.filename,
+      upload: File.read!(upload.path)
+    }
+  end
 
-      _ ->
-        %{content_type: nil, filename: nil, upload: nil}
-    end
+  def get_create_params(_upload) do
+    %{content_type: nil, filename: nil, upload: nil}
   end
 end
