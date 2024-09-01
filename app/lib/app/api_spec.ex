@@ -6,7 +6,7 @@ defmodule App.ApiSpec do
   @impl OpenApi
   def spec do
     %OpenApi{
-      servers: [%OpenApiSpex.Server{url: "http://localhost:4000"}],
+      servers: [%OpenApiSpex.Server{url: AppWeb.Endpoint.url()}],
       info: %Info{
         title: "App",
         version: "1.0"
