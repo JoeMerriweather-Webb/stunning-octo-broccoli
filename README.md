@@ -4,7 +4,8 @@
 
 ### Setup
 
-Setup that applies to the following sections.
+Setup that applies to the following sections. All mix commands should be run
+from the `app/` directory.
 
 * Start Postgres locally. It should be reachable at localhost:5432 with username
   `postgres` and password `postgres`.
