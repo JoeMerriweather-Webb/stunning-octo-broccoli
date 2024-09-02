@@ -8,7 +8,8 @@ Setup that applies to the following sections. All mix commands should be run
 from the `app/` directory.
 
 * Start Postgres locally. It should be reachable at localhost:5432 with username
-  `postgres` and password `postgres`.
+  `postgres` and password `postgres`. Running in Docker, the command should be:
+  `docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres postgres`.
 * Run `mix setup` to install and setup dependencies
 
 ### Start the Server
@@ -44,3 +45,24 @@ The API is documented with OpenAPI. With the server running locally, the spec is
 available at `http://localhost:4000/api/openapi`. In addition, a SwaggerUI for
 documentation and testing requests is available at
 `http://localhost:4000/api/swaggerui`.
+
+## Deploying a Release (Fly.io)
+
+This project is set up to deploy a self-contained release. This section details
+how to deploy the app to Fly.io and the steps will vary to deploy to a different
+platform.
+
+* [Install the Fly.io CLI](https://fly.io/docs/flyctl/install/)
+* Run `fly auth signup` if you don't already have an account
+* Make sure your account is set up with a payment method.
+* Run `flyctl auth login` to log in
+* Run `flyctl launch`. This will allow you to make configuration changes and
+  deploy the app. There shouldn't be anything to change. This command will do a
+  number of things:
+  * create a Postgres instance
+  * create a database
+  * set DATABASE_URL from the created Postgres instance as a secret
+  * generate the SECRET_KEY_BASE and set it as a secret
+  * build a release
+  * run the migrations
+  * deploy the app
