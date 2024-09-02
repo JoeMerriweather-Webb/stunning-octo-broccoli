@@ -37,3 +37,10 @@ In addition, the APIs can be requested through curl with the following:
 
 #### List Documents
 * Run `curl 'http://localhost:4000/api/documents'`
+
+### API Documentation
+
+The API is documented with OpenAPI. With the server running locally, the spec is
+available at `http://localhost:4000/api/openapi`. In addition, a SwaggerUI for
+documentation and testing requests is available at
+`http://localhost:4000/api/swaggerui`.
