@@ -32,7 +32,7 @@ defmodule AppWeb.DocumentControllerTest do
                  },
                  "id" => document.id,
                  "links" => %{
-                   "self" => "http://www.example.com/documents/#{document.id}"
+                   "self" => "http://www.example.com/api/documents/#{document.id}"
                  },
                  "relationships" => %{},
                  "type" => "documents"
@@ -60,7 +60,7 @@ defmodule AppWeb.DocumentControllerTest do
                  "filename" => @create_attrs.document.filename,
                  "plaintiffs" => ["ANGELO ANGELES"]
                },
-               "links" => %{"self" => "http://www.example.com/documents/#{id}"},
+               "links" => %{"self" => "http://www.example.com/api/documents/#{id}"},
                "relationships" => %{},
                "type" => "documents"
              } == json_response(conn, 200)["data"]
