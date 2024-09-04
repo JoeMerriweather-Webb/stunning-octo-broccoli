@@ -39,7 +39,6 @@ defmodule App.Documents.ExtractorTest do
     test "returns empty lists with XML without relevant data" do
       upload = File.read!("test/support/fixtures/uploads/simple.xml")
 
-
       assert %{
                plaintiffs: [],
                defendants: []

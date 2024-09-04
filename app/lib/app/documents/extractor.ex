@@ -1,13 +1,11 @@
 defmodule App.Documents.Extractor do
-  import SweetXml
-
   @moduledoc """
   The main function, extract_data/1 attempts to extract plaintiffs and
-  defendents from XML files. This currently only works with somewhat similarly
-  formatted XMLs, with the text in <formatting> tags. With more relevant sample
-  XMLs, it could be expanded to work with differently structured XMLs.
+  defendents from XML files. It first extracts every piece of textual data from
+  the XML, and flattens it into a list of "lines". Some sanitizing of the data
+  is attempted, such as removing line numbers.
 
-  The function first attempts to find the "versus" line, which typically
+  The function then attempts to find the "versus" line, which typically
   separates the plaintiffs (above) from the defendants (below). The plaintiffs
   were difficult to parse out from one of the sample XMLs, so it also checks
   lower down in the document for the plaintiffs.
@@ -16,9 +14,38 @@ defmodule App.Documents.Extractor do
   def extract_data(upload) do
     upload
     # get the text for all of the "formatting" elements
-    |> SweetXml.xpath(~x"//formatting/text()"l)
-    |> Enum.map(fn line -> line |> List.to_string() |> String.trim() end)
+    |> SweetXml.parse()
+    |> extract_all_text([])
+    |> List.flatten()
     |> find_data([])
+  end
+
+  defp extract_all_text(
+         {:xmlElement, _name, _expanded_name, _nsinfo, _namespace, _parents, _pos, _attributes,
+          [], _language, _xmlbase, _elementdef},
+         all_text
+       ) do
+    all_text
+  end
+
+  defp extract_all_text({:xmlText, _parents, _pos, _attributes, text, :text}, all_text) do
+    text = text |> List.to_string() |> String.trim()
+
+    if text not in ["", nil] do
+      [text | all_text]
+    else
+      all_text
+    end
+  end
+
+  defp extract_all_text(
+         {:xmlElement, _name, _expanded_name, _nsinfo, _namespace, _parents, _pos, _attributes,
+          content, _language, _xmlbase, _elementdef},
+         all_text
+       ) do
+    Enum.reduce(content, all_text, fn element, acc ->
+      [Enum.reverse(extract_all_text(element, [])) | acc]
+    end)
   end
 
   # didn't find a versus line
@@ -86,8 +113,8 @@ defmodule App.Documents.Extractor do
     if Regex.match?(~r/defendants./si, line) do
       defendants_lines
       |> Enum.reverse()
-      # remove line numbers, extra punctuation
-      |> Enum.reject(&(String.length(&1) <= 2))
+      # remove lines that don't have letters, such as line numbers, only punctuation
+      |> Enum.filter(&Regex.match?(~r/[a-zA-Z]/, &1))
       # general text clean up
       |> Enum.join(" ")
       |> String.split(" ", trim: true)
