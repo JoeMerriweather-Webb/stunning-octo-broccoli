@@ -5,11 +5,11 @@
 ### Setup
 
 Setup that applies to the following sections. All mix commands should be run
-from the `app/` directory.
+from the `app/` directory, while make commands should be run from the top-level.
 
 * Start Postgres locally. It should be reachable at localhost:5432 with username
-  `postgres` and password `postgres`. Running in Docker, the command should be:
-  `docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres postgres`.
+  `postgres` and password `postgres`. `make up` is provided to start Postgres in
+  a Docker container.
 * Run `mix setup` to install and setup dependencies
 
 ### Start the Server
