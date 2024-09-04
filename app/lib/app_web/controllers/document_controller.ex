@@ -10,10 +10,10 @@ defmodule AppWeb.DocumentController do
   tags ["documents"]
 
   operation :index,
-  summary: "List documents",
-  responses: [
-    ok: {"Documents response", "application/json", DocumentListResponse}
-  ]
+    summary: "List documents",
+    responses: [
+      ok: {"Documents response", "application/json", DocumentListResponse}
+    ]
 
   def index(conn, _params) do
     documents = Documents.list_documents()
@@ -54,12 +54,14 @@ defmodule AppWeb.DocumentController do
       ]
     ],
     responses: [
-      ok: {"Document response", "application/json", DocumentResponse}
+      ok: {"Document response", "application/json", DocumentResponse},
+      not_found: {"Not found", "application/json", nil}
     ]
 
   def show(conn, %{"id" => id}) do
-    document = Documents.get_document!(id)
-    render(conn, :show, data: document)
+    with {:ok, document} <- Documents.get_document(id) do
+      render(conn, :show, data: document)
+    end
   end
 
   def get_create_params(%Plug.Upload{} = upload) do

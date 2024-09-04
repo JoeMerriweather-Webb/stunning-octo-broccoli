@@ -71,4 +71,33 @@ defmodule AppWeb.DocumentControllerTest do
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
+
+  describe "show document" do
+    test "returns a document when it exists", %{conn: conn} do
+      document = Factory.insert(:document)
+      conn = get(conn, ~p"/api/documents/#{document.id}")
+
+      assert %{
+               "attributes" => %{
+                 "content_type" => document.content_type,
+                 "defendants" => document.defendants,
+                 "filename" => document.filename,
+                 "plaintiffs" => document.plaintiffs
+               },
+               "id" => document.id,
+               "links" => %{
+                 "self" => "http://www.example.com/api/documents/#{document.id}"
+               },
+               "relationships" => %{},
+               "type" => "documents"
+             } ==
+               json_response(conn, 200)["data"]
+    end
+
+    test "returns error when document doesn't exist", %{conn: conn} do
+      conn = get(conn, ~p"/api/documents/#{Ecto.UUID.generate()}")
+
+      assert json_response(conn, 404) == %{"errors" => %{"detail" => "Not Found"}}
+    end
+  end
 end

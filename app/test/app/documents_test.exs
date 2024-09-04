@@ -19,9 +19,13 @@ defmodule App.DocumentsTest do
       assert Documents.list_documents() == [document]
     end
 
-    test "get_document!/1 returns the document with given id" do
+    test "get_document/1 returns the document with given id" do
       document = Factory.insert(:document)
-      assert Documents.get_document!(document.id) == document
+      assert Documents.get_document(document.id) == {:ok, document}
+    end
+
+    test "get_document/1 returns not found error when record doesn't exist" do
+      assert Documents.get_document(Ecto.UUID.generate()) == {:error, :not_found}
     end
 
     test "create_document/1 with valid data creates a document" do

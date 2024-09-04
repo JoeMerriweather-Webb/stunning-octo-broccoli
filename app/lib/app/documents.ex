@@ -28,14 +28,20 @@ defmodule App.Documents do
 
   ## Examples
 
-      iex> get_document!(123)
-      %Document{}
+      iex> get_document(123)
+      {:ok, %Document{}}
 
-      iex> get_document!(456)
-      ** (Ecto.NoResultsError)
+      iex> get_document(456)
+      {:error, :not_found}
 
   """
-  def get_document!(id), do: Repo.get!(Document, id)
+  def get_document(id) do
+    if document = Repo.get(Document, id) do
+      {:ok, document}
+    else
+      {:error, :not_found}
+    end
+  end
 
   @doc """
   Creates a document.
