@@ -1,6 +1,18 @@
 defmodule App.Documents.Extractor do
   import SweetXml
 
+  @moduledoc """
+  The main function, extract_data/1 attempts to extract plaintiffs and
+  defendents from XML files. This currently only works with somewhat similarly
+  formatted XMLs, with the text in <formatting> tags. With more relevant sample
+  XMLs, it could be expanded to work with differently structured XMLs.
+
+  The function first attempts to find the "versus" line, which typically
+  separates the plaintiffs (above) from the defendants (below). The plaintiffs
+  were difficult to parse out from one of the sample XMLs, so it also checks
+  lower down in the document for the plaintiffs.
+  """
+
   def extract_data(upload) do
     upload
     # get the text for all of the "formatting" elements
@@ -9,11 +21,12 @@ defmodule App.Documents.Extractor do
     |> find_data([])
   end
 
-  def find_data([], _lines_above) do
+  # didn't find a versus line
+  defp find_data([], _lines_above) do
     %{plaintiffs: [], defendants: []}
   end
 
-  def find_data([line | lines_below], lines_above) do
+  defp find_data([line | lines_below], lines_above) do
     if versus_line?(line) do
       plaintiffs = find_plaintiffs_above_versus(lines_above, [])
 
@@ -79,6 +92,8 @@ defmodule App.Documents.Extractor do
       |> Enum.join(" ")
       |> String.split(" ", trim: true)
       |> Enum.map(&String.trim/1)
+      # remove standalone characters that are generally either used as
+      # separators, or seen as separators by OCR
       |> Enum.reject(&(&1 in ["i", "j", ")"]))
       |> Enum.join(" ")
       |> split_defendants()
@@ -100,6 +115,7 @@ defmodule App.Documents.Extractor do
       String.contains?(defendent_text, "; and") ->
         String.split(defendent_text, "; and")
 
+      # DOES is a common start of a defendant, e.g. DOES 1 through 100, inclusive
       String.contains?(defendent_text, ", DOES") ->
         [first, second] = String.split(defendent_text, ", DOES", parts: 2)
         [first, "DOES " <> second]
